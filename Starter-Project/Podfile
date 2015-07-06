@@ -1,0 +1,14 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '6.0'
+
+pod 'SinchRTC'
+pod 'SinchService'
+
+target 'ios-call-your-tennis-friends' do
+
+end
+
+target 'ios-call-your-tennis-friendsTests' do
+
+end
+
