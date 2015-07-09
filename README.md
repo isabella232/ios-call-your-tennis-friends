@@ -1,6 +1,8 @@
 # Build a Tennis App to Call your Tennis Friends from Global Tennis Network
 
-In this tutorial, you will learn how to create an app that calls friends from you [Global Tennis Network](https://www.globaltennisnetwork.com) profile. To get the most out of this tutorial, you will need to be familiar with the following topics:
+In this tutorial, you will learn how to create an app that calls friends from you [Global Tennis Network](https://www.globaltennisnetwork.com) profile. Tennis players everywhere will know how important it is to find a good hitting partner. This feature will help a tennis player reach out to a player who they know through Global Tennis Network. This makes it easier for people to squeeze a bit of tennis into their schedule at a short notice. Just call up a buddy and meet at a court! There's no need for users to exchange phone numbers, as we'll be using Sinch [app-to-app calling](https://www.sinch.com/products/voice-api/app-to-app-calling/).
+
+To get the most out of this tutorial, you will need to be familiar with the following topics:
 
 * XCode
 * Objective-C
@@ -19,6 +21,8 @@ We will be working with a starter project that you can download from [Github](#g
 
 # 2. Using the GTN API
 
+Before we start, take a quick look at **TennisParser.h** and **TennisParser.m**. I went ahead and made this class for the purpose of this tutorial. It has methods for each of the three ways we'll need to parse data that we get from the GTN API. Since the API returns data in XML, the class uses an NSXMLParser object. I won't go into the details of how that's done, but you can read up about NSXMLParser on [Apple's Developer Website](https://developer.apple.com/library/prerelease/ios//documentation/Cocoa/Reference/Foundation/Classes/NSXMLParser_Class/index.html).
+
 To start, we will want to log the user in when his or her credentials are entered. Go to **LoginViewController.m** and implement the method `LoginAction` as follows:
 
 ```objective-c
@@ -26,41 +30,24 @@ To start, we will want to log the user in when his or her credentials are entere
     NSString *userName = self.UsernameTextField.text;
     NSString *password = self.PasswordTextField.text;
     NSString *devKey = @"your-gtn-dev-key";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.globaltennisnetwork.com/component/api?apiCall=getSession&format=raw&username=%@&password=%@&devKey=%@", userName, password, devKey];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    TennisParser *parser = [[TennisParser alloc] initWithKey:devKey];
+    self.username = [parser parseXMLForIDWithUsername:userName Password:password];
     
-    NSURLResponse *response;
-    NSError *error;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    if(!error)
-    {
-        //NSLog(@"Response from server = %@", responseString);
+    if (self.username) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UserDidLoginNotification"
+                                                            object:nil
+                                                          userInfo:@{@"userId" : self.username}];
         
-        // 1
+        [self performSegueWithIdentifier:@"showMaster" sender:self.username];
     }
 } 
 ```
 
-Here, we fetch user data from the GTN server using the user's username and password. Be sure to fill it your GTN developer key. There's a commented NSLog statement to log your server response if needed.
+Be sure to fill in your GTN developer key.
 
-To use the data we've fetched, replace the comment `// 1` with the following code:
+Here, we fetch user data from the GTN server using the user's username and password. The method `parseXMLForIDWithUsername:Password:` returns the userID for a user that logs in.
 
-```objective-c
-NSArray *components1 = [responseString componentsSeparatedByString:@"<userID>"];
-NSArray *components2 = [components1[1] componentsSeparatedByString:@"</userID>"];
-self.username = components2[0];
-        
-[[NSNotificationCenter defaultCenter] postNotificationName:@"UserDidLoginNotification"
-                                                    object:nil
-                                                  userInfo:@{@"userId" : self.username}];
-        
-[self performSegueWithIdentifier:@"showMaster" sender:self.username];
-
-```
-
-Now, we get the the user ID and use it to login. We will use the user ID later to identify who sends and receives calls. To send the user ID to the next view, implement the method `prepareForSegue:sender` like this:
+We will use the userID later to identify who sends and receives calls. To send the user ID to the next view, implement the method `prepareForSegue:sender` like this:
 
  ```objective-c
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -76,86 +63,14 @@ Go ahead and add the following method:
 
 ```objective-c
 - (void) requestFriends {
+    self.objects = [[NSMutableArray alloc] init];
     NSString *devKey = @"your-gtn-key";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.globaltennisnetwork.com/component/api?apiCall=getUsersFriends&format=raw&userID=%@&devKey=%@", self.userID, devKey];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-    NSURLResponse *response;
-    NSError *error;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    if(!error)
-    {
-        // 2
-    }
+    TennisParser *parser = [[TennisParser alloc] initWithKey:devKey Array:self.objects];
+    [parser parseXMLForFriendsWithUserID:self.userID];
 }
 ```
 
-Now let's add code to parse all of the information out of the server response. There are many ways to do this (NSRegularExpression, etc.). At the end, however, you'll want to add CFriend objects to your objects array.
-
-Go ahead and replace the `// 2` comment with the following code:
-
-```objective-c
-        NSArray *components1 = [responseString componentsSeparatedByString:@"<user>"];
-        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:components1];
-        [tempArray removeObjectAtIndex:0];
-        components1 = [NSArray arrayWithArray:tempArray];
-        
-        for (NSString *component in components1){
-            NSArray *components2 = [component componentsSeparatedByString:@"</user>"];
-            NSString *friendInfo = components2[0];
-            
-            CFriend *newFriend = [[CFriend alloc] init];
-            NSArray *components3, *components4;
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<id>"];
-            components4 = [components3[1] componentsSeparatedByString:@"</id>"];
-            [newFriend setUserID:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<firstname><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></firstname>"];
-            [newFriend setFirstName:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<lastname><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></lastname>"];
-            [newFriend setLastName:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<country><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></country>"];
-            [newFriend setCountry:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<state><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></state>"];
-            [newFriend setState:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<city><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></city>"];
-            [newFriend setCity:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<level>"];
-            components4 = [components3[1] componentsSeparatedByString:@"</level>"];
-            [newFriend setLevel:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<gender>"];
-            components4 = [components3[1] componentsSeparatedByString:@"</gender>"];
-            [newFriend setGender:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<picUrl><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></picUrl>"];
-            [newFriend setPicUrl:components4[0]];
-            
-            if (!self.objects) {
-                self.objects = [[NSMutableArray alloc] init];
-            }
-            [self.objects addObject:newFriend];
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_objects.count-1 inSection:0];
-            [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView reloadData];
-        }
-```
-
-Note: This lists all of the user's friends on Global Tennis Network. I won't address how to display only friends who also have the app. 
+Note: This lists all of the user's friends on Global Tennis Network. I won't be covering how to display only friends who also have the app in this tutorial. 
 
 Now we can call the method in `viewDidLoad`:
 
@@ -263,40 +178,19 @@ To handle incoming calls, implement the following method:
     UIViewController *top = self.window.rootViewController;
     
     NSString *devKey = @"gtn-developer-key";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.globaltennisnetwork.com/component/api?apiCall=getUserInfo&format=raw&userID=%@&devKey=%@", [call remoteUserId], devKey];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    TennisParser *parser = [[TennisParser alloc] initWithKey:devKey];
+    CFriend *callingFriend = [parser parseXMLForFriendWithUserID:[call remoteUserId]];
     
-    NSURLResponse *response;
-    NSError *error;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    if(!error)
-    {
-        CFriend *callingFriend = [[CFriend alloc] init];
-        
-        NSArray *components1 = [responseString componentsSeparatedByString:@"<firstname><![CDATA["];
-        NSArray *components2 = [components1[1] componentsSeparatedByString:@"]]></firstname>"];
-        [callingFriend setFirstName: components2[0]];
-        
-        components1 = [responseString componentsSeparatedByString:@"<lastname><![CDATA["];
-        components2 = [components1[1] componentsSeparatedByString:@"]]></lastname>"];
-        [callingFriend setLastName: components2[0]];
-
-        components1 = [responseString componentsSeparatedByString:@"<picUrl><![CDATA["];
-        components2 = [components1[1] componentsSeparatedByString:@"]]></picUrl>"];
-        [callingFriend setPicUrl:components2[0]];
-        
+    if(callingFriend) {
         CallViewController *controller = [top.storyboard instantiateViewControllerWithIdentifier:@"callScreen"];
         [controller setCallingFriend:callingFriend];
-        //[controller setCall:call];
+        [controller setCall:call];
         [self.window.rootViewController presentViewController:controller animated:YES completion:nil];
-        
     }
 }
 ```
 
-Whenever the user receives an incoming call, we'll send a request to the server asking for the caller's info before displaying the call screen.
+Whenever the user receives an incoming call, we'll send a request to the server using the TennisParser object asking for the caller's info before displaying the call screen.
 
 
 Now let's enable the call button in the detail view controller. Go to **DetailViewController.m**. Start by adding this import statement at the top:

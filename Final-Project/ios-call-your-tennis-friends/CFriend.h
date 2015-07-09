@@ -20,4 +20,15 @@
 @property NSString *gender;
 @property NSString *picUrl;
 
+/*- (id) initWithFirstname:(NSString *)firstname
+                Lastname:(NSString *) lastname
+                  UserID:(NSString *)userID
+                 Country:(NSString *)country
+                   State:(NSString *)state
+                    City:(NSString *)city
+                   Level:(NSString *)level
+                  Gender:(NSString *)gender
+                  PicUrl:(NSString *)picUrl;
+ */
+
 @end

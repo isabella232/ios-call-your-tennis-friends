@@ -19,6 +19,7 @@
 		291806B61B49B2F4006A6D54 /* CallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291806B51B49B2F4006A6D54 /* CallViewController.m */; };
 		291806B91B49B6BF006A6D54 /* CFriend.m in Sources */ = {isa = PBXBuildFile; fileRef = 291806B81B49B6BF006A6D54 /* CFriend.m */; };
 		294FDD58EFE74ED9B6713300 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 326A15A969B90EA6DD57144F /* libPods.a */; };
+		298214991B4DAC3200818A76 /* TennisParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 298214981B4DAC3200818A76 /* TennisParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		291806B51B49B2F4006A6D54 /* CallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallViewController.m; sourceTree = "<group>"; };
 		291806B71B49B6BF006A6D54 /* CFriend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFriend.h; sourceTree = "<group>"; };
 		291806B81B49B6BF006A6D54 /* CFriend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFriend.m; sourceTree = "<group>"; };
+		298214971B4DAC3200818A76 /* TennisParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TennisParser.h; sourceTree = "<group>"; };
+		298214981B4DAC3200818A76 /* TennisParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TennisParser.m; sourceTree = "<group>"; };
 		326A15A969B90EA6DD57144F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		895D06F0D1FC591AE29C092A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +114,8 @@
 			children = (
 				291806B71B49B6BF006A6D54 /* CFriend.h */,
 				291806B81B49B6BF006A6D54 /* CFriend.m */,
+				298214971B4DAC3200818A76 /* TennisParser.h */,
+				298214981B4DAC3200818A76 /* TennisParser.m */,
 				2918068C1B49B215006A6D54 /* AppDelegate.h */,
 				2918068D1B49B215006A6D54 /* AppDelegate.m */,
 				291806B11B49B2DA006A6D54 /* LoginViewController.h */,
@@ -305,6 +310,7 @@
 				291806B91B49B6BF006A6D54 /* CFriend.m in Sources */,
 				291806941B49B215006A6D54 /* DetailViewController.m in Sources */,
 				291806B31B49B2DA006A6D54 /* LoginViewController.m in Sources */,
+				298214991B4DAC3200818A76 /* TennisParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

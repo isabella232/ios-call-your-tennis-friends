@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "CallViewController.h"
 #import "CFriend.h"
+#include "TennisParser.h"
 
 @interface AppDelegate () <SINServiceDelegate, SINCallClientDelegate>
 
@@ -18,7 +19,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    id config = [SinchService configWithApplicationKey:@"your-applicaiton-key"
+    id config = [SinchService configWithApplicationKey:@"your-application-key"
                                      applicationSecret:@"your-application-secret"
                                        environmentHost:@"sandbox.sinch.com"];
     
@@ -69,36 +70,15 @@
     
     UIViewController *top = self.window.rootViewController;
     
-    NSString *devKey = @"gtn-developer-key";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.globaltennisnetwork.com/component/api?apiCall=getUserInfo&format=raw&userID=%@&devKey=%@", [call remoteUserId], devKey];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSString *devKey = @"gtn-dev-key";
+    TennisParser *parser = [[TennisParser alloc] initWithKey:devKey];
+    CFriend *callingFriend = [parser parseXMLForFriendWithUserID:[call remoteUserId]];
     
-    NSURLResponse *response;
-    NSError *error;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    if(!error)
-    {
-        CFriend *callingFriend = [[CFriend alloc] init];
-        
-        NSArray *components1 = [responseString componentsSeparatedByString:@"<firstname><![CDATA["];
-        NSArray *components2 = [components1[1] componentsSeparatedByString:@"]]></firstname>"];
-        [callingFriend setFirstName: components2[0]];
-        
-        components1 = [responseString componentsSeparatedByString:@"<lastname><![CDATA["];
-        components2 = [components1[1] componentsSeparatedByString:@"]]></lastname>"];
-        [callingFriend setLastName: components2[0]];
-        
-        components1 = [responseString componentsSeparatedByString:@"<picUrl><![CDATA["];
-        components2 = [components1[1] componentsSeparatedByString:@"]]></picUrl>"];
-        [callingFriend setPicUrl:components2[0]];
-        
+    if(callingFriend) {
         CallViewController *controller = [top.storyboard instantiateViewControllerWithIdentifier:@"callScreen"];
         [controller setCallingFriend:callingFriend];
         [controller setCall:call];
         [self.window.rootViewController presentViewController:controller animated:YES completion:nil];
-        
     }
 }
 

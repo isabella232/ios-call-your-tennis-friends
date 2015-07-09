@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import "MasterViewController.h"
+#import "TennisParser.h"
 
 @interface LoginViewController ()
 
@@ -38,29 +39,19 @@
 - (IBAction)LoginAction:(id)sender {
     NSString *userName = self.UsernameTextField.text;
     NSString *password = self.PasswordTextField.text;
-    NSString *devKey = @"gtn-developer-key";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.globaltennisnetwork.com/component/api?apiCall=getSession&format=raw&username=%@&password=%@&devKey=%@", userName, password, devKey];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSString *devKey = @"gtn-dev-key";
     
-    NSURLResponse *response;
-    NSError *error;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    if(!error)
-    {
-        //NSLog(@"Response from server = %@", responseString);
-        
-        NSArray *components1 = [responseString componentsSeparatedByString:@"<userID>"];
-        NSArray *components2 = [components1[1] componentsSeparatedByString:@"</userID>"];
-        self.username = components2[0];
-        
+    TennisParser *parser = [[TennisParser alloc] initWithKey:devKey];
+    self.username = [parser parseXMLForIDWithUsername:userName Password:password];
+    
+    if (self.username) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UserDidLoginNotification"
                                                             object:nil
                                                           userInfo:@{@"userId" : self.username}];
         
         [self performSegueWithIdentifier:@"showMaster" sender:self.username];
     }
+    
 }
 
 @end

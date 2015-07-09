@@ -18,6 +18,7 @@
 		291806B31B49B2DA006A6D54 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291806B21B49B2DA006A6D54 /* LoginViewController.m */; };
 		291806B61B49B2F4006A6D54 /* CallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291806B51B49B2F4006A6D54 /* CallViewController.m */; };
 		291806B91B49B6BF006A6D54 /* CFriend.m in Sources */ = {isa = PBXBuildFile; fileRef = 291806B81B49B6BF006A6D54 /* CFriend.m */; };
+		29E2375D1B4F22CE00D5A460 /* TennisParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 29E2375C1B4F22CE00D5A460 /* TennisParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,8 @@
 		291806B51B49B2F4006A6D54 /* CallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallViewController.m; sourceTree = "<group>"; };
 		291806B71B49B6BF006A6D54 /* CFriend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFriend.h; sourceTree = "<group>"; };
 		291806B81B49B6BF006A6D54 /* CFriend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFriend.m; sourceTree = "<group>"; };
+		29E2375B1B4F22CE00D5A460 /* TennisParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TennisParser.h; sourceTree = "<group>"; };
+		29E2375C1B4F22CE00D5A460 /* TennisParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TennisParser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +98,8 @@
 			children = (
 				291806B71B49B6BF006A6D54 /* CFriend.h */,
 				291806B81B49B6BF006A6D54 /* CFriend.m */,
+				29E2375B1B4F22CE00D5A460 /* TennisParser.h */,
+				29E2375C1B4F22CE00D5A460 /* TennisParser.m */,
 				2918068C1B49B215006A6D54 /* AppDelegate.h */,
 				2918068D1B49B215006A6D54 /* AppDelegate.m */,
 				291806B11B49B2DA006A6D54 /* LoginViewController.h */,
@@ -246,6 +251,7 @@
 				291806B91B49B6BF006A6D54 /* CFriend.m in Sources */,
 				291806941B49B215006A6D54 /* DetailViewController.m in Sources */,
 				291806B31B49B2DA006A6D54 /* LoginViewController.m in Sources */,
+				29E2375D1B4F22CE00D5A460 /* TennisParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,6 +446,7 @@
 				291806AD1B49B215006A6D54 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		291806AE1B49B215006A6D54 /* Build configuration list for PBXNativeTarget "ios-call-your-tennis-friendsTests" */ = {
 			isa = XCConfigurationList;
@@ -448,6 +455,7 @@
 				291806B01B49B215006A6D54 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

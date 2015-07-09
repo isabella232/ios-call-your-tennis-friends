@@ -11,6 +11,7 @@
 #import "CallViewController.h"
 #import "AppDelegate.h"
 #import "CFriend.h"
+#import "TennisParser.h"
 
 @interface MasterViewController ()
 
@@ -76,74 +77,10 @@
 }
 
 - (void) requestFriends {
-    NSString *devKey = @"gtn-developer-key";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.globaltennisnetwork.com/component/api?apiCall=getUsersFriends&format=raw&userID=%@&devKey=%@", self.userID, devKey];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-    NSURLResponse *response;
-    NSError *error;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    if(!error)
-    {
-        NSArray *components1 = [responseString componentsSeparatedByString:@"<user>"];
-        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:components1];
-        [tempArray removeObjectAtIndex:0];
-        components1 = [NSArray arrayWithArray:tempArray];
-        
-        for (NSString *component in components1){
-            NSArray *components2 = [component componentsSeparatedByString:@"</user>"];
-            NSString *friendInfo = components2[0];
-            
-            CFriend *newFriend = [[CFriend alloc] init];
-            NSArray *components3, *components4;
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<id>"];
-            components4 = [components3[1] componentsSeparatedByString:@"</id>"];
-            [newFriend setUserID:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<firstname><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></firstname>"];
-            [newFriend setFirstName:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<lastname><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></lastname>"];
-            [newFriend setLastName:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<country><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></country>"];
-            [newFriend setCountry:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<state><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></state>"];
-            [newFriend setState:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<city><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></city>"];
-            [newFriend setCity:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<level>"];
-            components4 = [components3[1] componentsSeparatedByString:@"</level>"];
-            [newFriend setLevel:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<gender>"];
-            components4 = [components3[1] componentsSeparatedByString:@"</gender>"];
-            [newFriend setGender:components4[0]];
-            
-            components3 = [friendInfo componentsSeparatedByString:@"<picUrl><![CDATA["];
-            components4 = [components3[1] componentsSeparatedByString:@"]]></picUrl>"];
-            [newFriend setPicUrl:components4[0]];
-            
-            if (!self.objects) {
-                self.objects = [[NSMutableArray alloc] init];
-            }
-            [self.objects addObject:newFriend];
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_objects.count-1 inSection:0];
-            [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView reloadData];
-        }
-    }
+    self.objects = [[NSMutableArray alloc] init];
+    NSString *devKey = @"gtn-dev-key";
+    TennisParser *parser = [[TennisParser alloc] initWithKey:devKey Array:self.objects];
+    [parser parseXMLForFriendsWithUserID:self.userID];
 }
 
 
