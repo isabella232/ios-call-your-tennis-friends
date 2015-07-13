@@ -1,6 +1,8 @@
 # Build a Tennis App to Call your Tennis Friends from Global Tennis Network
 
-In this tutorial, you will learn how to create an app that calls friends from you [Global Tennis Network](https://www.globaltennisnetwork.com) profile. Tennis players everywhere will know how important it is to find a good hitting partner. This feature will help a tennis player reach out to a player who they know through Global Tennis Network. This makes it easier for people to squeeze a bit of tennis into their schedule at a short notice. Just call up a buddy and meet at a court! There's no need for users to exchange phone numbers, as we'll be using Sinch [app-to-app calling](https://www.sinch.com/products/voice-api/app-to-app-calling/).
+In this tutorial, you will learn how to create an app that calls friends from your [Global Tennis Network](https://www.globaltennisnetwork.com) profile. While keeping your phone number private, this feature will allow tennis players to reach out to players who they know through Global Tennis Network. This makes it easier for people to squeeze a bit of tennis into their schedule at a short notice. Just call up a buddy and meet at a court! There's no need for users to exchange phone numbers, as we'll be using Sinch [app-to-app calling](https://www.sinch.com/products/voice-api/app-to-app-calling/). This creates a simple and private way for players to organize when and where they can play tennis.
+
+When I started studying at U.C. Davis, I often wanted to connect with tennis players at my skill level. I was used to playing for my high school team every day, so I needed to find a way to get my tennis fix! An app with this feature would have made things so much simpler for me. Those awkward two-hour gaps between lectures could have been used to play tennis!
 
 To get the most out of this tutorial, you will need to be familiar with the following topics:
 
