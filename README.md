@@ -19,7 +19,7 @@ First, you will want to create an app on you [Sinch Dashboard](https://www.sinch
 
 Next, go to the [GTN Developer Site](https://www.globaltennisnetwork.com/home/developers) and opt to become a developer. You will be provided with a developer key. Save that for later.
 
-We will be working with a starter project that you can download from [Github](#github link#). Once you have the starter project downloaded, use the included **Podfile** to install the necessary CocoaPods through Terminal with the command `pod install`. Am XCode workspace should now be available for us to use.
+We will be working with a starter project that you can download from [Github](https://github.com/sinch/ios-call-your-tennis-friends). Once you have the starter project downloaded, use the included **Podfile** to install the necessary CocoaPods through Terminal with the command `pod install`. Am XCode workspace should now be available for us to use.
 
 # 2. Using the GTN API
 
@@ -203,9 +203,11 @@ Now let's enable the call button in the detail view controller. Go to **DetailVi
 
 Then, add the following method to help us place calls using the SINService object from the AppDelegate:
 
+```objective-c
 - (id<SINCallClient>)callClient {
     return [[(AppDelegate *)[[UIApplication sharedApplication] delegate] sinch] callClient];
 }
+```
 
 Finally, implement `CallAction` as follows:
 
