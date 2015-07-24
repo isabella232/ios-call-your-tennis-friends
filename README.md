@@ -13,7 +13,7 @@ To get the most out of this tutorial, you will need to be familiar with the foll
 ![login](img/Login.png) ![call-in](img/Call-In.png)
 
 
-# 1. Setup
+## 1. Setup
 
 First, you will want to create an app on you [Sinch Dashboard](https://www.sinch.com/dashboard/). Take note of the application key and secret, as we will need them later.
 
@@ -21,7 +21,7 @@ Next, go to the [GTN Developer Site](https://www.globaltennisnetwork.com/home/de
 
 We will be working with a starter project that you can download from [Github](https://github.com/sinch/ios-call-your-tennis-friends). Once you have the starter project downloaded, use the included **Podfile** to install the necessary CocoaPods through Terminal with the command `pod install`. Am XCode workspace should now be available for us to use.
 
-# 2. Using the GTN API
+## 2. Using the GTN API
 
 Before we start, take a quick look at **TennisParser.h** and **TennisParser.m**. I went ahead and made this class for the purpose of this tutorial. It has methods for each of the three ways we'll need to parse data that we get from the GTN API. Since the API returns data in XML, the class uses an NSXMLParser object. I won't go into the details of how that's done, but you can read up about NSXMLParser on [Apple's Developer Website](https://developer.apple.com/library/prerelease/ios//documentation/Cocoa/Reference/Foundation/Classes/NSXMLParser_Class/index.html).
 
@@ -123,7 +123,7 @@ Great! Now the user will be able to choose from a list of friends to see a playe
 
 ![friend-info-2](img/Friend-Info-2.png)
 
-# 3. Making Calls with SinchService
+## 3. Making Calls with SinchService
 
 We'll be using SinchService to send and receive calls. SinchService allows us to handle calling from anywhere in our app by initializing a SINService object in the application's AppDelegate.
 
